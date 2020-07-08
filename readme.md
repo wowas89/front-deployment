@@ -1,0 +1,1 @@
+If you want to change the API url go to "utils" and inside this folder you will find instance of axios (change baseURL).

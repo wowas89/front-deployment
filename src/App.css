@@ -1,0 +1,177 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+form {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* For IE <= 11 */
+  select::-ms-expand {
+    display: none;
+  }
+}
+
+/* END OF RESET */
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #FFF3E0;
+  box-sizing:border-box;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+/* HOME PAGE */
+.homePage {
+  height: 90vh;
+  width: 100%;
+  margin: auto;
+}
+
+.homePageForm {
+  background-color: #757575;
+  border-radius: 15px;
+}
+
+/* NAVIGATION */
+.navigation {
+  max-height: 10vh;
+  border-bottom: 1px solid black;
+}
+
+.navigationLink {
+  padding-left: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: #424242;
+}
+
+.navigationLink:hover {
+  color: #EF6C00;
+  text-decoration: none;
+}
+
+
+/* DEPLOYMENT LIST */
+.deploymentListTitle {
+  background-color: #FFCC80;
+  font-weight: 600;
+}
+
+.listOfDeployments {
+  background-color: #FFF3E0;
+}
+
+.listOfDeployments a {
+  color: #E65100;
+}
+
+.listOfDeployments:hover {
+  background-color: #FFE0B2;
+}
+
+/* FORMS */
+
+.addButton {
+  background-color: #FF9100;
+  font-weight: 700;
+}
+
+.changeForm button {
+  background-color: #FFB74D;
+  font-weight: 700;
+  padding: 5px;
+  width: 50%;
+}
+
+.addForm {
+  width: 60%;
+  margin: auto;
+}
+
+.deleteButton:hover {
+  color: #D84315;
+}
+
+:required:invalid {
+  box-shadow: none;
+}
+
+/* Message */
+.message {
+  background-color: #E0E0E0;
+}
+
