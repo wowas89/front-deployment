@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const FormSelect = ({handleChange, value, children}) => (
+const FormSelect = ({ handleChange, value, children }) => (
   <div className="input-group">
     <select className="form-control" onChange={handleChange} value={value} >
       {children}
@@ -9,8 +9,11 @@ const FormSelect = ({handleChange, value, children}) => (
   </div>
 )
 
+
 FormSelect.propTypes = {
   handleChange: PropTypes.func
 }
 
 export default FormSelect;
+
+export const MemoFormSelect = React.memo(FormSelect);

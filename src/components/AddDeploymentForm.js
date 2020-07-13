@@ -1,13 +1,17 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTemplates, addDeployment, addMessage } from '../actions';
+import { addDeployment, addMessage, clearMessage } from '../actions';
 import validator from 'validator';
 
-// components
-import FormInput from './FormComponents/FormInput';
-import FormSelect from './FormComponents/FormSelect';
-import FormSubmitButton from './FormComponents/FormSubmitButton';
+import {selectTemplates} from '../selectors/templateSelectors';
+import {selectMessage} from '../selectors/messageSelectors';
 
+// components
+import {MemoFormInput} from './FormComponents/FormInput';
+import {MemoFormSelect} from './FormComponents/FormSelect';
+import FormSubmitButton from './FormComponents/FormSubmitButton';
+import Message from './Message';
+import Timer from './Timer';
 
 // reducer
 const initialState = {
@@ -42,51 +46,114 @@ const AddDeploymentForm = () => {
 
   // url
   const [url, setUrl] = useState('');
+  const [miliseconds, setMiliseconds] = useState(null);
+  const [intervalID, setIntervalID] = useState(null);
 
   // template reducer
   const [state, dispatch] = useReducer(templateReducer, initialState);
 
   // states from redux
-  const templates = useSelector(state => state.template.templates);
+  const templates = useSelector(state => selectTemplates(state));
+  const message = useSelector(state => selectMessage(state));
 
   // dispatch (redux)
   const dispatchRedux = useDispatch();
 
-  // get templates
-  useEffect(() => {
-    dispatchRedux(getTemplates())
-  }, [dispatchRedux])
-
-  // set current template when templates updates
+  // set current template 
   useEffect(() => {
     if (templates.length > 0) dispatch({ type: "GET_CURRENT_TEMPLATE", payload: { name: templates[0].name, templates } })
   }, [templates])
 
+  // clear message and interval when component unmount
+  useEffect(() => {
+    return () => {
+      clearInterval(intervalID);
+      dispatchRedux(clearMessage())
+    };
+  }, [dispatchRedux, intervalID])
 
-  // Add template 
-  const handleSubmit = e => {
-    e.preventDefault();
+
+  // help function to add deployment 
+  const submitDeployment = () => {
     if (!validator.isURL(url)) return dispatchRedux(addMessage('invalid url'));
     dispatchRedux(addDeployment({ url, templateName: state.currentTemplate, version: state.currentTemplateVersion }));
     setUrl('');
   }
 
+  // Add deployment 
+  const handleSubmit = e => {
+    e.preventDefault();
+    submitDeployment();
+  }
+
+  // schedule deployment
+  const handleSchedule = () => {
+    if (!validator.isURL(url)) return dispatchRedux(addMessage('invalid url'));
+    const triggerTime = new Date().getTime() + (Math.floor(Math.random() * 26 + 5) * 1000); // add deployment after random 5-30 seconds
+    let timeLeft = triggerTime - new Date().getTime();
+
+    // timer
+    const tick = () => {
+      if (timeLeft > 0) {
+        timeLeft -= 100;  
+        setMiliseconds(timeLeft)
+      } else {
+        clearInterval(id);
+        setMiliseconds(null);
+        submitDeployment();
+      }
+    }
+
+    const id = setInterval(tick, 100);
+    setIntervalID(id); 
+  }
+
+
+  // handle change
+  const handleInputChange = useCallback(e =>{
+    setUrl(e.target.value)
+  }, [])
+
+  const handleTemplateChange = useCallback(e=>{
+      dispatch({ type: "GET_CURRENT_TEMPLATE", payload: { name: e.target.value, templates } })
+  }, [dispatch, templates])
+
+  const handleTemplateVersionChange = useCallback(e=>{
+    dispatch({ type: "CHANGE_CURRENT_VERSION", payload: e.target.value })
+  }, [dispatch])
+  
+
+  // memo selects options
+  const templatesOptions = useMemo(()=>{
+    return templates.map(template => <option key={template._id}  value={template.name}> {template.name}</option>)
+  }, [templates])
+
+  const templateVersionsOptions = useMemo(()=>{
+    return state.currentTemplateVersions.map(version => <option key={version} > {version} </option>)
+  }, [state.currentTemplateVersions])
+
+  
   return (
     <div className="pb-4 addForm">
+      {message && <Message message={message} />}
       <form onSubmit={handleSubmit}>
-        <FormSelect value={state.currentTemplate} handleChange={e => dispatch({ type: "GET_CURRENT_TEMPLATE", payload: { name: e.target.value, templates } })}>
-          {templates.map(template => <option key={template._id} value={template.name}> {template.name}</option>
-          )}
-        </FormSelect>
 
-        <FormSelect value={state.currentTemplateVersion} handleChange={e => dispatch({ type: "CHANGE_CURRENT_VERSION", payload: e.target.value })}>
-          {state.currentTemplateVersions.map(version => <option key={version}> {version} </option>)}
-        </FormSelect>
+        <MemoFormSelect value={state.currentTemplate} handleChange={handleTemplateChange}>
+          {templatesOptions}
+        </MemoFormSelect>
 
-        <FormInput type="text" placeholder="url" value={url} handleChange={e => setUrl(e.target.value)} required="required" />
-          
+        <MemoFormSelect value={state.currentTemplateVersion}  handleChange={handleTemplateVersionChange}>
+          {templateVersionsOptions}
+        </MemoFormSelect>
+
+        <MemoFormInput type="text" placeholder="url" value={url} handleChange={handleInputChange} required="required" />
+
         <FormSubmitButton additionalStyle="addButton"> ADD DEPLOYMENT </FormSubmitButton>
+
       </form>
+      <div><button className="btn scheduleButton" disabled={miliseconds > 0} onClick={handleSchedule}>  SCHEDULE DEPLOYMENT </button></div>
+    
+       {miliseconds > 0 && <Timer miliseconds={miliseconds} />} 
     </div>)
 }
 

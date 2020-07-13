@@ -7,10 +7,8 @@ const Message = ({message}) =>{
 
     const dispatch = useDispatch();
 
-    const handleClearMessage = ()=>{
-        dispatch(clearMessage())
-    }
-
+    const handleClearMessage = ()=> dispatch(clearMessage());
+    
     return(
     <div className="message mb-2 p-1 text-center" onClick={handleClearMessage}>
         {message}

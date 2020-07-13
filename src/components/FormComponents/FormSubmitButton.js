@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const FormButton = ({ children, additionalStyle }) => (
+const FormSubmitButton = ({ children, additionalStyle }) => (
     <div className="form-group">
-        <button className={`form-control ${additionalStyle ? additionalStyle : ''}`}>
+        <button className={`form-control btn ${additionalStyle ? additionalStyle : ''}`}>
             {children}
         </button>
     </div>
 )
 
-FormButton.propTypes = {
+FormSubmitButton.propTypes = {
     additionalStyle: PropTypes.string
 }
 
-export default FormButton;
+export default FormSubmitButton;

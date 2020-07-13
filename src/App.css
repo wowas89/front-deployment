@@ -166,6 +166,14 @@ code {
   color: #D84315;
 }
 
+.scheduleButton{
+  font-weight: 700;
+ background-color: #FF6D00;
+ width: 100%;
+}
+
+
+
 :required:invalid {
   box-shadow: none;
 }
@@ -175,3 +183,8 @@ code {
   background-color: #E0E0E0;
 }
 
+/* Timer */
+.timer{
+  border: 3px solid #FF6D00;
+  background-color: #FFF3E0;
+}
